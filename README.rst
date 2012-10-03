@@ -44,6 +44,12 @@ Add to the configuration file of ``Nginx``::
         empty_gif;
     }
 
+Where, "STORAGE_ROOT" is the path to root of media- and static- directories.
+For example I have in my ``settings.py``::
+
+    STORAGE_ROOT = "/storage/kinsburg_tv"
+    MEDIA_ROOT = os.path.join(STORAGE_ROOT, "media")
+    STATIC_ROOT = os.path.join(STORAGE_ROOT, "static")
 
 Using:
 ------------------------
