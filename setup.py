@@ -14,7 +14,7 @@ setup(
     version=__version__,
     description="Resizing and cropping images via Nginx, and cache the result",
     long_description=long_description,
-    keywords='django, nginx. image. resize, crop, cache',
+    keywords='django, nginx, image, resize, crop, cache',
     author='Mikhail Andreev',
     author_email='x11org@gmail.com',
     url='http://github.com/adw0rd/django-nginx-image',
