@@ -74,3 +74,11 @@ In the templates can be used as follows::
         {% thumbnail user.profile.avatar 130 130 crop=1 %}
         {% thumbnail user.profile.avatar 130 0 crop=1 %}
         {% thumbnail user.profile.avatar 0 130 crop=1 %}
+
+
+Convert:
+-------------
+
+Unfortunaly, **ngx_http_image_filter_module** only supports JPEG, GIF and PNG, so you have to convert BMP to JPG::
+
+    ./manage.py nginx_image_converter -i /storage/project/media -o /storage/project/newmedia
