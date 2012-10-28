@@ -82,3 +82,14 @@ Convert:
 Unfortunaly, **ngx_http_image_filter_module** only supports JPEG, GIF and PNG, so you have to convert BMP to JPG::
 
     ./manage.py nginx_image_converter -i /storage/project/media -o /storage/project/newmedia
+
+Available options::
+
+    -i SOURCE, --source=SOURCE
+                        Source directory with pictures
+    -o DESTINATION, --destination=DESTINATION
+                        Destination directory for save the pictures
+    -q QUALITY, --quality=QUALITY
+                        Percentage of quality for images in JPG
+    -e, --change-extension
+                        Change extension to "jpg"
