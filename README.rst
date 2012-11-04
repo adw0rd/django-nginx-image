@@ -27,7 +27,6 @@ Add to ``settings.py``::
 Now, add two sections called ``server``:
 
 1. The cache server ``www.example.org``, which will got to the second server and receive changed image.
-
 2. The image server ``image.example.org``, which can to resize and to crop a images.
 
 Client request ➡ ``www.example.org`` ➡ ``image.example.org`` (resize/crop a image)
@@ -37,7 +36,7 @@ Add to the configuration file of ``Nginx``::
 
     http {
 
-        proxy_cache_path <STORAGE_ROOT>/nginx/cache levels=1:2 keys_zone=<CACHE_NAME>:10m inactive=1d max_size=1G;
+        proxy_cache_path <STORAGE_ROOT>/nginx/cache levels=1:2 keys_zone=<CACHE_NAME>:10m max_size=1G;
         
         server {
             listen 80;
