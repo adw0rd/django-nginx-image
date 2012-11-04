@@ -24,24 +24,66 @@ Add to ``settings.py``::
         'nginx_image',
     )
 
+Now, add two sections called ``server``:
+
+1. The cache server ``www.example.org``, which will got to the second server and receive changed image.
+
+2. The image server ``image.example.org``, which can to resize and to crop a images.
+
+Client request ➡ ``www.example.org`` ➡ ``image.example.org`` (resize/crop a image)
+      ⬉ ``www.example.org`` (save image to cache) ⬋
+
 Add to the configuration file of ``Nginx``::
 
-    location ~* ^/resize/([\d\-]+)/([\d\-]+)/(.+)$ {
-        alias <STORAGE_ROOT>/$3;
-        image_filter resize $1 $2;
-        image_filter_buffer 2M;
-        error_page 415 = /empty;
-    }
+    http {
 
-    location ~* ^/crop/([\d\-]+)/([\d\-]+)/(.+)$ {
-        alias <STORAGE_ROOT>/$3;
-        image_filter crop $1 $2;
-        image_filter_buffer 2M;
-        error_page 415 = /empty;
-    }
-
-    location = /empty {
-        empty_gif;
+        proxy_cache_path <STORAGE_ROOT>/nginx/cache levels=1:2 keys_zone=<CACHE_NAME>:10m inactive=1d max_size=1G;
+        
+        server {
+            listen 80;
+            server_name www.example.org;
+            
+            location ~* ^/resize/([\d\-]+)/([\d\-]+)/(.+)$ {
+                proxy_pass http://image.example.org/resize/$1/$2/$3;
+                proxy_cache <CACHE_NAME>;
+                proxy_cache_key "$host$document_uri";
+                proxy_cache_valid 200 1d;
+                proxy_cache_valid any 1m;
+                proxy_cache_use_stale error timeout invalid_header updating;
+            }
+            
+            location ~* ^/crop/([\d\-]+)/([\d\-]+)/(.+)$ {
+                proxy_pass http://image.example.org/crop/$1/$2/$3;
+                proxy_cache <CACHE_NAME>;
+                proxy_cache_key "$host$document_uri";
+                proxy_cache_valid 200 1d;
+                proxy_cache_valid any 1m;
+                proxy_cache_use_stale error timeout invalid_header updating;
+            }
+        }
+        
+        server {
+            listen 80;
+            server_name image.example.org;
+            
+            location ~* ^/resize/([\d\-]+)/([\d\-]+)/(.+)$ {
+                alias <STORAGE_ROOT>/$3;
+                image_filter resize $1 $2;
+                image_filter_buffer 2M;
+                error_page 415 = /empty;
+            }
+            
+            location ~* ^/crop/([\d\-]+)/([\d\-]+)/(.+)$ {
+                alias <STORAGE_ROOT>/$3;
+                image_filter crop $1 $2;
+                image_filter_buffer 2M;
+                error_page 415 = /empty;
+            }
+            
+            location = /empty {
+                empty_gif;
+            }
+        }
     }
 
 Where, "STORAGE_ROOT" is the path to root of media- and static- directories.
@@ -50,6 +92,8 @@ For example I have in my ``settings.py``::
     STORAGE_ROOT = "/storage/kinsburg_tv"
     MEDIA_ROOT = os.path.join(STORAGE_ROOT, "media")
     STATIC_ROOT = os.path.join(STORAGE_ROOT, "static")
+
+And "CACHE_NAME" is the arbitrarily name, example: "my_project_cache".
 
 Using:
 ------------------------
