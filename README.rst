@@ -37,8 +37,7 @@ Add to ``settings.py``::
 
 Now, add two sections called ``server``:
 
-1. The cache server ``example.org``, which will connect to the second server and receive changed image and save the result to the cache.
-
+1. The cache server ``www.example.org``, which will connect to the second server and receive changed image and save the result to the cache.
 2. The image server ``image.example.org``, which can to resize and to crop a images.
 
 .. image:: http://adw0rd.com/media/uploads/django-nginx-image.jpg
@@ -47,7 +46,7 @@ A sample of configuration file for your project::
 
     http {
 
-        proxy_cache_path <STORAGE_ROOT>/nginx/cache levels=1:2 keys_zone=<CACHE_NAME>:10m inactive=1d max_size=1G;
+        proxy_cache_path <STORAGE_ROOT>/nginx/cache levels=1:2 keys_zone=<CACHE_NAME>:10m max_size=1G;
         
         server {
             listen 80;
