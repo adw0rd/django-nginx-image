@@ -4,15 +4,26 @@ django-nginx-image
 .. image:: http://adw0rd.com/media/uploads/django_nginx_image.jpg
     :align: right
 
-Resizing and cropping images via Nginx, and cache the result 
+Resizing and cropping images via Nginx, as well as caching the result
 
     pip install django-nginx-image
+
+
+Features:
+------------------------
+
+* High-performance resize and crop via Nginx
+* Transparent caching an images
+* Template tag ``thumbnail`` for building correct URL for Nginx
+* The Django command for convert unsupported images formats (example, BMP) to JPG
 
 For more details see:
 ------------------------
 
 * http://github.com/adw0rd/django-nginx-image - the GitHub repository
 * http://pypi.python.org/pypi/django-nginx-image - the PyPI page
+* http://adw0rd.com/2012/django-nginx-image/ - article about this package on Russian
+* http://adw0rd.com/2012/django-nginx-image/en/ - article about this package on English
 
 
 Settings:
@@ -26,14 +37,13 @@ Add to ``settings.py``::
 
 Now, add two sections called ``server``:
 
-1. The cache server ``www.example.org``, which will got to the second server and receive changed image.
+1. The cache server ``example.org``, which will connect to the second server and receive changed image and save the result to the cache.
 
 2. The image server ``image.example.org``, which can to resize and to crop a images.
 
-Client request ➡ ``www.example.org`` ➡ ``image.example.org`` (resize/crop a image)
-      ⬉ ``www.example.org`` (save image to cache) ⬋
+.. image:: http://adw0rd.com/media/uploads/django-nginx-image.jpg
 
-Add to the configuration file of ``Nginx``::
+A sample of configuration file for your project::
 
     http {
 
@@ -43,17 +53,8 @@ Add to the configuration file of ``Nginx``::
             listen 80;
             server_name www.example.org;
             
-            location ~* ^/resize/([\d\-]+)/([\d\-]+)/(.+)$ {
-                proxy_pass http://image.example.org/resize/$1/$2/$3;
-                proxy_cache <CACHE_NAME>;
-                proxy_cache_key "$host$document_uri";
-                proxy_cache_valid 200 1d;
-                proxy_cache_valid any 1m;
-                proxy_cache_use_stale error timeout invalid_header updating;
-            }
-            
-            location ~* ^/crop/([\d\-]+)/([\d\-]+)/(.+)$ {
-                proxy_pass http://image.example.org/crop/$1/$2/$3;
+            location ~* ^/(resize|crop)/ {
+                proxy_pass http://image.example.org$request_uri;
                 proxy_cache <CACHE_NAME>;
                 proxy_cache_key "$host$document_uri";
                 proxy_cache_valid 200 1d;
@@ -86,8 +87,7 @@ Add to the configuration file of ``Nginx``::
         }
     }
 
-Where, "STORAGE_ROOT" is the path to root of media- and static- directories.
-For example I have in my ``settings.py``::
+Where, ``STORAGE_ROOT`` is the path to directory with web-assests. For example I have in my ``settings.py``:
 
     STORAGE_ROOT = "/storage/kinsburg_tv"
     MEDIA_ROOT = os.path.join(STORAGE_ROOT, "media")
