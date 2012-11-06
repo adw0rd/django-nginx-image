@@ -86,7 +86,7 @@ A sample of configuration file for your project::
         }
     }
 
-Where, ``STORAGE_ROOT`` is the path to directory with web-assests. For example I have in my ``settings.py``:
+Where, ``STORAGE_ROOT`` is the path to directory with web-assests. For example I have in my ``settings.py``::
 
     STORAGE_ROOT = "/storage/kinsburg_tv"
     MEDIA_ROOT = os.path.join(STORAGE_ROOT, "media")
