@@ -94,7 +94,7 @@ Where, ``STORAGE_ROOT`` is the path to directory with web-assests. For example I
 
 And "CACHE_NAME" is the arbitrarily name, example: "my_project_cache".
 
-Using:
+Usage:
 ------------------------
 
 In the templates can be used as follows::
