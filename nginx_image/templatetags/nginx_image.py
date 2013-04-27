@@ -12,7 +12,7 @@ def thumbnail(image_url, width="-", height="-", crop=False):
         w=width if width else "-",
         h=height if height else "-")
     if isinstance(image_url, (ImageFieldFile, )):
-        if hasattr(image_url, 'url'):
+        if getattr(image_url, 'name', None) and hasattr(image_url, 'url'):
             url += image_url.url
     else:
         url += image_url
