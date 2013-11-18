@@ -1,5 +1,5 @@
 from django import template
-from django.db.models.fields.files import ImageFieldFile
+from django.db.models.fields.files import FieldFile
 
 register = template.Library()
 
@@ -11,7 +11,7 @@ def thumbnail(image_url, width="-", height="-", crop=False):
         method=method,
         w=width if width else "-",
         h=height if height else "-")
-    if isinstance(image_url, (ImageFieldFile, )):
+    if isinstance(image_url, FieldFile):
         if getattr(image_url, 'name', None) and hasattr(image_url, 'url'):
             url += image_url.url
     else:
