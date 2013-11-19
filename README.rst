@@ -4,9 +4,13 @@ django-nginx-image
 .. image:: http://adw0rd.com/media/uploads/django_nginx_image.jpg
     :align: right
 
+
 Resizing and cropping images via Nginx, as well as caching the result
 
     pip install django-nginx-image
+    
+.. image:: https://pypip.in/d/django-nginx-image/badge.png
+    :target: http://pypi.python.org/pypi/django-nginx-image
 
 
 Features:
